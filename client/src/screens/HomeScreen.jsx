@@ -6,7 +6,6 @@ import ProductDetails from '../components/ProductDetails/ProductDetails';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-
 const Stack = createStackNavigator();
 
 export function HomeScreen() {
@@ -21,7 +20,7 @@ export function HomeScreen() {
       .then(data => {
         setProducts(data.results)
         data.results.forEach(product => {
-          console.log(product.attributes);
+          //console.log(product.attributes);
         });
       })
       .catch(error => console.error('Erro:', error.message));
@@ -43,7 +42,7 @@ export function HomeScreen() {
           </View>
         )}
       </Stack.Screen>
-      <Stack.Screen name="ProductDetails" component={ProductDetails} />
+      <Stack.Screen name="Detalhes" component={ProductDetails} />
     </Stack.Navigator>
   </ScrollView>
   );
