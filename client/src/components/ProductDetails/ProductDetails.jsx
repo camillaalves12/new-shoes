@@ -1,20 +1,71 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, StatusBar, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import { Icon } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetails = ({ route }) => {
+  
   const { item } = route.params;
+
+  const [favorite, setFavorite] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageColor, setMessageColor] = useState('');
+
+  useEffect(() => {
+    const getFavoriteStatus = async () => {
+      const favorites = await AsyncStorage.getItem('favorites');
+      if (favorites) {
+        setFavorite(JSON.parse(favorites).includes(item.id));
+      }
+    };
+
+    getFavoriteStatus();
+  }, [item.id]);
+
+  const toggleFavorite = async () => {
+    let favorites = await AsyncStorage.getItem('favorites');
+    favorites = favorites ? JSON.parse(favorites) : [];
+
+    if (favorite) {
+      favorites = favorites.filter(fav => fav !== item.id);
+      setMessage('Item removido dos favoritos');
+      setMessageColor('rgba(0, 0, 0, 0.7)');
+    } else {
+      favorites.push(item.id);
+      setMessage('Item adicionado aos favoritos');
+      setMessageColor('rgba(0, 128, 0, 0.7)');
+    }
+
+    await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
+    setFavorite(!favorite);
+    setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 2000);
+  };
 
   const findAttribute = (id) => {
     const attribute = item.attributes.find((attr) => attr.id === id);
     return attribute ? attribute.value_name : "Não disponível";
   };
 
-   function formatPrice(price) {
-    return new Intl.NumberFormat("pt-BR", {
+  function formatPriceWithSuperscript(price) {
+    const formattedPrice = new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
     }).format(price);
+
+    // Separar os valores inteiros e os centavos
+    const [reais, centavos] = formattedPrice.replace('R$', '').trim().split(',');
+
+    return {
+      reais,
+      centavos,
+    };
   }
+
+  const { reais, centavos } = formatPriceWithSuperscript(item.price);
 
   const attributeLabels = {
     BRAND: "Marca",
@@ -22,12 +73,8 @@ const ProductDetails = ({ route }) => {
     MODEL: "Modelo",
     COLOR: "Cor",
     PROCESSOR_MODEL: "Processador",
-    RAM: "RAM",
-    STORAGE: "Armazen"
-
   };
-
-  //{item.attributes.find(attr => attr.id === 'BRAND').value_name}
+//{item.attributes.find(attr => attr.id === 'BRAND').value_name}
 
   //ERA ASSIM - ESTA MAIS ENTENDIVEL
   //   <View style={styles.container}>
@@ -41,14 +88,33 @@ const ProductDetails = ({ route }) => {
   //       <Text>Processador: <span style={styles.value_description}> {findAttribute('PROCESSOR_MODEL')} </span> </Text>
   //   </View>
   // </View>
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{item.title}</Text>
+    <View>
+
+      <Icon
+        name={favorite ? 'heart' : 'heart-o'}
+        type='font-awesome'
+        color={favorite ? 'red' : 'grey'}
+        onPress={toggleFavorite}
+        containerStyle={{ position: 'absolute', top: 0, right: 5 }}
+      />
       <Image
         source={{ uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") }}
         style={styles.image}
-      />
+        />
+
+    </View>
+    {showMessage && (
+        <View style={[styles.messageContainer, { backgroundColor: messageColor }]}>
+          <Text style={styles.messageText}>{message}</Text>
+        </View>
+      )}
+      <Text style={styles.price}>
+        <Text style={styles.priceSymbol}>R$</Text> {reais},
+        <Text style={styles.priceCents}>{centavos}</Text>
+      </Text>
       <Text style={styles.labelDescription}>Características do produto</Text>
       <ScrollView style={styles.scrollView}>
         <View style={styles.viewDescription}>
@@ -61,7 +127,7 @@ const ProductDetails = ({ route }) => {
               <View key={attrId} style={[styles.item, itemStyle]}>
                 <Text style={styles.description}>
                   {attributeLabels[attrId]}:{" "}
-                  <Text style={styles.value_description}>
+                  <Text style={styles.valueDescription}>
                     {attributeValue}
                   </Text>
                 </Text>
@@ -70,13 +136,26 @@ const ProductDetails = ({ route }) => {
           })}
         </View>
       </ScrollView>
-      <Text style={styles.price}>{formatPrice(item.price)}</Text>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
+  messageContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '90%',
+    padding: 15,
+    backgroundColor: '#039703',
+    alignItems: 'center',
+    zIndex: 1000,
+    borderRadius: 10,
+    alignSelf: 'center',
+  },
+  messageText: {
+    color: '#fff',
+    fontSize: 16,
+  },
   scrollView: {
     flex: 1,
   },
@@ -85,24 +164,32 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#fff",
   },
-  title:{
+  title: {
     marginBottom: 10,
     fontWeight: 'bold',
-    fontSize: 18
+    fontSize: 18,
   },
   image: {
-    width: 400,
-    height: 400,
+    width: 300,
+    height: 300,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     alignSelf: "center",
   },
   price: {
-    fontSize: 26,
+    fontSize: 40,
     alignSelf: 'center',
     marginTop: 10,
     marginBottom: 10,
-    fontWeight: "500"
+    fontWeight: "500",
+  },
+  priceSymbol: {
+    fontSize: 17,
+    verticalAlign: 'super',
+  },
+  priceCents: {
+    fontSize: 17,
+    verticalAlign: 'super',
   },
   labelDescription: {
     fontSize: 20,
@@ -114,22 +201,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 20,
     paddingTop: 20,
-    fontWeight: "300"
+    fontWeight: "300",
   },
   viewDescription: {
     flex: 1,
-    marginTop: 10
+    marginTop: 10,
   },
-  description:{
-    fontSize: 18
+  description: {
+    fontSize: 18,
   },
-  value_description: {
+  valueDescription: {
     fontWeight: "bold",
-    fontSize: 18
+    fontSize: 18,
   },
   item: {
     padding: 10,
-    marginBottom: 10,  // Adiciona um espaçamento entre os itens
+    marginBottom: 10, // Adiciona um espaçamento entre os itens
   },
   itemEven: {
     backgroundColor: '#ececec',
