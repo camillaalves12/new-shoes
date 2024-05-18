@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, StatusBar, View, ScrollView, FlatList, Image, Text } from 'react-native';
+import { StyleSheet, StatusBar, View, ScrollView, FlatList, TouchableOpacity,} from 'react-native';
+
+// import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'react-native-elements';
 
 import ProductCard from '../components/ProductCard/ProductCard';
 import ProductDetails from '../components/ProductDetails/ProductDetails';
+import FavoritesScreen from '../screens/FavoritesScreen';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { NotificationsScreen } from './NotificationsScreen';
 
 // import Constants from 'expo-constants'
 
@@ -14,6 +18,8 @@ const Stack = createStackNavigator();
 export function HomeScreen() {
 
   // const { manifest } = Constants;
+
+  const navigation = useNavigation();
 
   const [products, setProducts] = useState([]);
 
@@ -29,11 +35,15 @@ export function HomeScreen() {
       .catch(error => console.error('Erro:', error.message));
   }, []);
 
-
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
     <Stack.Navigator>
-      <Stack.Screen name="Produtos" >
+      <Stack.Screen name="Produtos" options={ {
+        headerRight: () => (
+          <TouchableOpacity onPress={() => navigation.navigate('Favoritos')}>
+            <Icon name="heart" type="font-awesome" color="#272525" />
+          </TouchableOpacity>
+        )
+          }}>
         {props => (
           <View style={styles.container}>
             <FlatList
@@ -46,16 +56,15 @@ export function HomeScreen() {
         )}
       </Stack.Screen>
       <Stack.Screen name="Detalhes" component={ProductDetails} />
+      <Stack.Screen name="Favoritos" component={FavoritesScreen} />
+      
     </Stack.Navigator>
-  </ScrollView>
+
   );
 }
 
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-},
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 10,
