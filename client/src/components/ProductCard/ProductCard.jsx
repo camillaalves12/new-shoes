@@ -10,10 +10,23 @@ export function formatPrice(price) {
   }).format(price);
 }
 
+export function formatPriceWithSuperscript(price) {
+  const formattedPrice = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(price);
+
+  // Separar os valores inteiros e os centavos
+  const [reais, centavos] = formattedPrice.replace('R$', '').trim().split(',');
+
+  return `<span style="font-size: 0.75em; vertical-align: super;">R$</span> ${reais},<span style="font-size: 0.75em; vertical-align: super;">${centavos}</span>`;
+}
+
 
 const ProductCard = ({ item, navigation }) => {
+  
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { item })}>
+    <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { item })}>
       <View style={styles.card}>
         <Image source={{uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg")}} style={styles.image}/>
         <View style={styles.details}>
