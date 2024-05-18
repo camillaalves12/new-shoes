@@ -5,6 +5,7 @@ import { SafeAreaView, StyleSheet, StatusBar } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { NotificationsScreen } from './src/screens/NotificationsScreen';
 
 
 

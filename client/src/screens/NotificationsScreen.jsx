@@ -1,11 +1,19 @@
-import * as React from 'react';
-import { Button, View } from 'react-native';
 
+import React, { useEffect } from 'react';
+
+import { View, Text } from 'react-native';
 
 export function NotificationsScreen({ navigation }) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button onPress={() => navigation.goBack()} title="Go back home" />
-      </View>
-    );
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Erro:', error));
+  }, []);
+
+  return (
+    <View>
+      <Text>Testando requisição HTTPS</Text>
+    </View>
+  );
   }
