@@ -1,5 +1,7 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, Button, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import defaultImage from '../../../assets/defaultImage.png'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -22,13 +24,25 @@ export function formatPriceWithSuperscript(price) {
   return `<span style="font-size: 0.75em; vertical-align: super;">R$</span> ${reais},<span style="font-size: 0.75em; vertical-align: super;">${centavos}</span>`;
 }
 
-
 const ProductCard = ({ item, navigation }) => {
-  
+
+  // const [favorite, setFavorite] = useState(false);
+
+  // useEffect(() => {
+  //   const getFavoriteStatus = async () => {
+  //     const favorites = await AsyncStorage.getItem('favorites');
+  //     if (favorites) {
+  //       setFavorite(JSON.parse(favorites).includes(item.id));
+  //     }
+  //   };
+  //   getFavoriteStatus();
+  // }, [item.id]);
+
+
   return (
     <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { item })}>
       <View style={styles.card}>
-        <Image source={{uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg")}} style={styles.image}/>
+      <Image source={{uri: item.thumbnail ? item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") : defaultImage}} style={styles.image}/>
         <View style={styles.details}>
           <Text style={styles.descricao} numberOfLines={1} ellipsizeMode='tail'>{item.title}</Text>
           <Text style={styles.preco}>{formatPrice(item.price)}</Text>
@@ -69,7 +83,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   quantity: {
-    fontSize: 12,
+    fontSize: 10,
     marginTop: 10,
     color: '#888',
   }
