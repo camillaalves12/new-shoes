@@ -5,17 +5,20 @@ import ProductCard from '../components/ProductCard/ProductCard';
 import ProductDetails from '../components/ProductDetails/ProductDetails';
 
 import { createStackNavigator } from '@react-navigation/stack';
+import { NotificationsScreen } from './NotificationsScreen';
+
+// import Constants from 'expo-constants'
 
 const Stack = createStackNavigator();
 
 export function HomeScreen() {
 
+  // const { manifest } = Constants;
 
   const [products, setProducts] = useState([]);
 
-
   useEffect(() => {
-    fetch('http://localhost:3000/products')
+    fetch(`http://192.168.100.171:3000/products`)
       .then(response => response.json())
       .then(data => {
         setProducts(data.results)
