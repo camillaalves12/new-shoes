@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 
 import ProductCard from '../components/ProductCard/ProductCard';
 import ProductDetails from '../components/ProductDetails/ProductDetails';
-import FavoritesScreen from '../screens/FavoritesScreen';
+import FavoritesScreen from '../screens/FavoritesScreen'
 
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -24,7 +24,7 @@ export function HomeScreen() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch(`http://192.168.100.171:3000/products`)
+    fetch(`http://192.168.101.189:3000/products`)
       .then(response => response.json())
       .then(data => {
         setProducts(data.results)
@@ -37,24 +37,34 @@ export function HomeScreen() {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Produtos" options={ {
-        headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate('Favoritos')}>
-            <Icon name="heart" type="font-awesome" color="#272525" />
-          </TouchableOpacity>
-        )
-          }}>
-        {props => (
-          <View style={styles.container}>
-            <FlatList
-              data={products}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => <ProductCard {...props} item={item} />}
-              numColumns={2}
-            />
-          </View>
-        )}
-      </Stack.Screen>
+
+      <Stack.Screen 
+            name="Produtos" 
+            options={{
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Favoritos')}>
+                  <Icon name="heart" type="font-awesome" color="#272525" />
+                </TouchableOpacity>
+              )
+            }}
+          >
+            {props => (
+              <View style={styles.container}>
+                <FlatList
+                  data={products}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item }) => (
+                    <ProductCard 
+                      item={item} 
+                      onPress={() => props.navigation.navigate('Detalhes', { item: item })}
+                    />
+                  )}
+                  numColumns={2}
+                />
+              </View>
+            )}
+          </Stack.Screen>
+
       <Stack.Screen name="Detalhes" component={ProductDetails} />
       <Stack.Screen name="Favoritos" component={FavoritesScreen} />
       
