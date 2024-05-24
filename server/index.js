@@ -11,8 +11,6 @@ const cors = require('cors');
 app.use(cors());
 
 
-
-
 //arquivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -22,7 +20,7 @@ app.post('/test', async (req, res) => {
     //variaveis que precisam ser enviadas para o mercado livre
     const app_id =  "7085994933657810"
     const client_secret =  "7dqgdo9At4j3e8oehYXuPiAydtWUM8J3"
-    const code =  "TG-6648fef777070300017c9c05-405601391"
+    const code =  "TG-664b4be2effca400018fd77a-405601391"
     const redirect_uri =  "https://www.google.com.br"
    
     //url principal da api do ML - obtem o token 
@@ -54,7 +52,7 @@ app.post('/test', async (req, res) => {
 app.post('/getAccessToken', async (req, res) => {
     const app_id =  "7085994933657810"
     const client_secret =  "7dqgdo9At4j3e8oehYXuPiAydtWUM8J3"
-    const refresh_token = "TG-6648fed83c7d3100011f37d9-405601391"
+    const refresh_token = "TG-664b4c83825a9c0001df53b7-405601391"
 
         //url principal da api do ML - obtem o token 
         const url_principal = "https://api.mercadolibre.com/oauth/token"
@@ -83,7 +81,7 @@ app.post('/getAccessToken', async (req, res) => {
 
 
 app.get('/products', async (req, res) => {
-    const access_token = "APP_USR-7085994933657810-051815-ac19f50546c429fe32fe3bdc0c13e423-405601391"
+    const access_token = "APP_USR-7085994933657810-052009-f75264dc4308e1b80dc814a898ab953d-405601391"
 
     const headers = {
         "Authorization": `Bearer ${access_token}`
