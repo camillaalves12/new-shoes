@@ -24,7 +24,7 @@ export function formatPriceWithSuperscript(price) {
   return `<span style="font-size: 0.75em; vertical-align: super;">R$</span> ${reais},<span style="font-size: 0.75em; vertical-align: super;">${centavos}</span>`;
 }
 
-const ProductCard = ({ item, navigation }) => {
+const ProductCard = ({ item, onPress }) => {
 
   // const [favorite, setFavorite] = useState(false);
 
@@ -40,7 +40,7 @@ const ProductCard = ({ item, navigation }) => {
 
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { item })}>
+    <TouchableOpacity onPress={() => item && onPress()}>
       <View style={styles.card}>
       <Image source={{uri: item.thumbnail ? item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") : defaultImage}} style={styles.image}/>
         <View style={styles.details}>
