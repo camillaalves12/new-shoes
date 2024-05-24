@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const ProductDetails = ({ route }) => {
   
@@ -12,42 +14,49 @@ const ProductDetails = ({ route }) => {
   const [message, setMessage] = useState('');
   const [messageColor, setMessageColor] = useState('');
 
-  useEffect(() => {
-    const getFavoriteStatus = async () => {
-      const favorites = await AsyncStorage.getItem('favorites');
-      if (favorites) {
-        setFavorite(JSON.parse(favorites).includes(item.id));
-      }
-    };
-
-    getFavoriteStatus();
-  }, [item.id]);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      const getFavoriteStatus = async () => {
+        let favorites = await AsyncStorage.getItem('favorites');
+        favorites = favorites ? JSON.parse(favorites) : [];
+        const isFavorite = favorites.some(fav => fav.id === item.id);
+        setFavorite(isFavorite);
+      };
+  
+      getFavoriteStatus();
+    }, [item.id])
+  );
   const toggleFavorite = async () => {
     let favorites = await AsyncStorage.getItem('favorites');
     favorites = favorites ? JSON.parse(favorites) : [];
-
+  
     if (favorite) {
-      favorites = favorites.filter(fav => fav !== item.id);
+      const newFavorites = favorites.filter(fav => fav.id !== item.id);
+      await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
       setMessage('Item removido dos favoritos');
       setMessageColor('rgba(0, 0, 0, 0.7)');
     } else {
-      favorites.push(item.id);
+      const newFavorites = [...favorites, item];
+      await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
       setMessage('Item adicionado aos favoritos');
       setMessageColor('rgba(0, 128, 0, 0.7)');
     }
-
-    await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
+    
     setFavorite(!favorite);
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
     }, 2000);
+
+
   };
 
   const findAttribute = (id) => {
-    const attribute = item.attributes.find((attr) => attr.id === id);
-    return attribute ? attribute.value_name : "Não disponível";
+    if (item && item.attributes) {
+      const attribute = item.attributes.find((attr) => attr.id === id);
+      return attribute ? attribute.value_name : "Não disponível";
+    }
+    return "Não disponível";
   };
 
   function formatPriceWithSuperscript(price) {
