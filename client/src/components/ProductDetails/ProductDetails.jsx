@@ -98,54 +98,55 @@ const ProductDetails = ({ route }) => {
   //   </View>
   // </View>
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{item.title}</Text>
-    <View>
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+        <Text style={styles.title}>{item.title}</Text>
+      <View>
 
-      <Icon
-        name={favorite ? 'heart' : 'heart-o'}
-        type='font-awesome'
-        color={favorite ? 'red' : 'grey'}
-        onPress={toggleFavorite}
-        containerStyle={{ position: 'absolute', top: 0, right: 5 }}
-      />
-      <Image
-        source={{ uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") }}
-        style={styles.image}
+        <Icon
+          name={favorite ? 'heart' : 'heart-o'}
+          type='font-awesome'
+          color={favorite ? 'red' : 'grey'}
+          onPress={toggleFavorite}
+          containerStyle={{ position: 'absolute', top: 0, right: 5 }}
         />
+        <Image
+          source={{ uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") }}
+          style={styles.image}
+          />
 
-    </View>
-    {showMessage && (
-        <View style={[styles.messageContainer, { backgroundColor: messageColor }]}>
-          <Text style={styles.messageText}>{message}</Text>
-        </View>
-      )}
-      <Text style={styles.price}>
-        <Text style={styles.priceSymbol}>R$</Text> {reais},
-        <Text style={styles.priceCents}>{centavos}</Text>
-      </Text>
-      <Text style={styles.labelDescription}>Características do produto</Text>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.viewDescription}>
-          {Object.keys(attributeLabels).map((attrId, index) => {
-            const attributeValue = findAttribute(attrId);
-            const itemStyle =
-              index % 2 === 0 ? styles.itemEven : styles.itemOdd;
+      </View>
+      {showMessage && (
+          <View style={[styles.messageContainer, { backgroundColor: messageColor }]}>
+            <Text style={styles.messageText}>{message}</Text>
+          </View>
+        )}
+        <Text style={styles.price}>
+          <Text style={styles.priceSymbol}>R$</Text> {reais},
+          <Text style={styles.priceCents}>{centavos}</Text>
+        </Text>
+        <Text style={styles.labelDescription}>Características do produto</Text>
+          <View style={styles.viewDescription}>
+            {Object.keys(attributeLabels).map((attrId, index) => {
+              const attributeValue = findAttribute(attrId);
+              const itemStyle =
+                index % 2 === 0 ? styles.itemEven : styles.itemOdd;
 
-            return (
-              <View key={attrId} style={[styles.item, itemStyle]}>
-                <Text style={styles.description}>
-                  {attributeLabels[attrId]}:{" "}
-                  <Text style={styles.valueDescription}>
-                    {attributeValue}
+              return (
+                <View key={attrId} style={[styles.item, itemStyle]}>
+                  <Text style={styles.description}>
+                    {attributeLabels[attrId]}:{" "}
+                    <Text style={styles.valueDescription}>
+                      {attributeValue}
+                    </Text>
                   </Text>
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
-    </View>
+                </View>
+              );
+            })}
+          </View>
+      </View>
+    </ScrollView>
+
   );
 };
 
@@ -208,7 +209,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     marginTop: 10,
     marginBottom: 10,
-    paddingBottom: 20,
     paddingTop: 20,
     fontWeight: "300",
   },
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ececec',
   },
   itemOdd: {
-    backgroundColor: '#add8e6',
+    backgroundColor: '#87898a',
   },
 });
 
