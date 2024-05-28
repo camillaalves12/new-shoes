@@ -24,7 +24,7 @@ export function HomeScreen() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch(`http://192.168.101.189:3000/products`)
+    fetch(`http://10.0.0.138:3000/products`)
       .then(response => response.json())
       .then(data => {
         setProducts(data.results)
@@ -43,7 +43,7 @@ export function HomeScreen() {
             options={{
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Favoritos')}>
-                  <Icon name="heart" type="font-awesome" color="#272525" />
+                  <Icon name="heart" type="font-awesome" color="#272525" style={styles.icon} />
                 </TouchableOpacity>
               )
             }}
@@ -82,6 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems:'center'
+  },
+  icon: {
+    marginRight: 10,
   }
 });
 
