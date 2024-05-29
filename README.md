@@ -2,7 +2,7 @@
 
 ### É um app de mostruário que consome a API do Mercado Livre e exibe produtos relacionados a celulares e celulares. 
 
-###𝗣𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗶𝘀 𝗙𝘂𝗻𝗰𝗶𝗼𝗻𝗮𝗹𝗶𝗱𝗮𝗱𝗲𝘀:
+### 𝗣𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗶𝘀 𝗙𝘂𝗻𝗰𝗶𝗼𝗻𝗮𝗹𝗶𝗱𝗮𝗱𝗲𝘀:
  
 𝗣𝗮́𝗴𝗶𝗻𝗮 𝗣𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗹: Contém a lista de produtos disponíveis, com a capacidade de navegar para os detalhes de cada produto.
 𝗣𝗮́𝗴𝗶𝗻𝗮 𝗱𝗲 𝗱𝗲𝘁𝗮𝗹𝗵𝗲𝘀 𝗱𝗼 𝗽𝗿𝗼𝗱𝘂𝘁𝗼: Exibe características detalhadas dos produtos selecionados.
