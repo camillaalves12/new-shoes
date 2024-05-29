@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, StatusBar, View, ScrollView, FlatList, TouchableOpacity,} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProductCard from '../components/ProductCard/ProductCard';
@@ -7,25 +7,20 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
-  const isMounted = useRef(false);
+  const isMounted = useRef(true);
 
-  const fetchProducts = async () => {
-    const response = await fetch(`http://192.168.101.189:3000/products`);
-    const data = await response.json();
-    return data.results;
-  };
-
-  const updateFavorites = async () => {
-    const favoriteIds = JSON.parse(await AsyncStorage.getItem('favorites'));
-    const allProducts = await fetchProducts();
-    const favorites = allProducts.filter(product => favoriteIds.includes(product.id));
-    if (isMounted.current) {
-      setFavorites(favorites);
+  const updateFavorites = useCallback(async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      if (favorites !== null && isMounted.current) {
+        setFavorites(JSON.parse(favorites));
+      }
+    } catch (error) {
+      console.error('Failed to fetch favorites:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    isMounted.current = true;
     return () => {
       isMounted.current = false;
     };
@@ -33,12 +28,12 @@ const FavoritesScreen = ({ navigation }) => {
 
   useEffect(() => {
     updateFavorites();
-  }, []);
+  }, [updateFavorites]);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       updateFavorites();
-    }, [])
+    }, [updateFavorites])
   );
 
   const renderItem = ({ item }) => {
@@ -55,9 +50,10 @@ const FavoritesScreen = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={favorites}
-        keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
         numColumns={2}
+        key={2}
       />
     </View>
   );
