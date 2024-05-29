@@ -34,12 +34,12 @@ const ProductDetails = ({ route }) => {
       const newFavorites = favorites.filter(fav => fav.id !== item.id);
       await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
       setMessage('Item removido dos favoritos');
-      setMessageColor('rgba(0, 0, 0, 0.7)');
+      setMessageColor('rgb(242, 37, 37)');
     } else {
       const newFavorites = [...favorites, item];
       await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
       setMessage('Item adicionado aos favoritos');
-      setMessageColor('rgba(0, 128, 0, 0.7)');
+      setMessageColor('rgb(0, 128, 0)');
     }
     
     setFavorite(!favorite);
@@ -153,7 +153,7 @@ const ProductDetails = ({ route }) => {
 const styles = StyleSheet.create({
   messageContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: '10%', 
     width: '90%',
     padding: 15,
     backgroundColor: '#039703',
