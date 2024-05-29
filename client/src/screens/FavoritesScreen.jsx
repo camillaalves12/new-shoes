@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, StatusBar, View, ScrollView, FlatList, TouchableOpacity,} from 'react-native';
+import { StyleSheet, View, FlatList,} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProductCard from '../components/ProductCard/ProductCard';
 import { useFocusEffect } from '@react-navigation/native';

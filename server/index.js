@@ -20,7 +20,7 @@ app.post('/test', async (req, res) => {
     //variaveis que precisam ser enviadas para o mercado livre
     const app_id =  "7085994933657810"
     const client_secret =  "7dqgdo9At4j3e8oehYXuPiAydtWUM8J3"
-    const code =  "TG-66564f5e3aa2e5000197a2f9-405601391"
+    const code =  "TG-66575f4249f1e100014c9c8c-405601391"
     const redirect_uri =  "https://www.google.com.br"
    
     //url principal da api do ML - obtem o token 
@@ -52,7 +52,7 @@ app.post('/test', async (req, res) => {
 app.post('/getAccessToken', async (req, res) => {
     const app_id =  "7085994933657810"
     const client_secret =  "7dqgdo9At4j3e8oehYXuPiAydtWUM8J3"
-    const refresh_token = "TG-66564f96292e8d0001016617-405601391"
+    const refresh_token = "TG-66575f805537ad0001110c7b-405601391"
 
         //url principal da api do ML - obtem o token 
         const url_principal = "https://api.mercadolibre.com/oauth/token"
@@ -81,7 +81,7 @@ app.post('/getAccessToken', async (req, res) => {
 
 
 app.get('/products', async (req, res) => {
-    const access_token = "APP_USR-7085994933657810-052817-fd539cf9368d4c54bb2102f36f132a1c-405601391"
+    const access_token = "APP_USR-7085994933657810-052913-099b8092820ec6c846d71eee2e0e08d6-405601391"
 
     const headers = {
         "Authorization": `Bearer ${access_token}`
