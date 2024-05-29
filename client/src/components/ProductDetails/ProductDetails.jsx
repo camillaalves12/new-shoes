@@ -1,54 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-import { Icon } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-
+import { Icon } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProductDetails = ({ route }) => {
-  
   const { item } = route.params;
 
   const [favorite, setFavorite] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageColor, setMessageColor] = useState('');
+  const [message, setMessage] = useState("");
+  const [messageColor, setMessageColor] = useState("");
 
   useFocusEffect(
     React.useCallback(() => {
       const getFavoriteStatus = async () => {
-        let favorites = await AsyncStorage.getItem('favorites');
+        let favorites = await AsyncStorage.getItem("favorites");
         favorites = favorites ? JSON.parse(favorites) : [];
-        const isFavorite = favorites.some(fav => fav.id === item.id);
+        const isFavorite = favorites.some((fav) => fav.id === item.id);
         setFavorite(isFavorite);
       };
-  
+
       getFavoriteStatus();
     }, [item.id])
   );
   const toggleFavorite = async () => {
-    let favorites = await AsyncStorage.getItem('favorites');
+    let favorites = await AsyncStorage.getItem("favorites");
     favorites = favorites ? JSON.parse(favorites) : [];
-  
+
     if (favorite) {
-      const newFavorites = favorites.filter(fav => fav.id !== item.id);
-      await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
-      setMessage('Item removido dos favoritos');
-      setMessageColor('rgb(242, 37, 37)');
+      const newFavorites = favorites.filter((fav) => fav.id !== item.id);
+      await AsyncStorage.setItem("favorites", JSON.stringify(newFavorites));
+      setMessage("Item removido dos favoritos");
+      setMessageColor("rgb(242, 37, 37)");
     } else {
       const newFavorites = [...favorites, item];
-      await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
-      setMessage('Item adicionado aos favoritos');
-      setMessageColor('rgb(0, 128, 0)');
+      await AsyncStorage.setItem("favorites", JSON.stringify(newFavorites));
+      setMessage("Item adicionado aos favoritos");
+      setMessageColor("rgb(0, 128, 0)");
     }
-    
+
     setFavorite(!favorite);
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
     }, 2000);
-
-
   };
 
   const findAttribute = (id) => {
@@ -66,7 +62,10 @@ const ProductDetails = ({ route }) => {
     }).format(price);
 
     // Separar os valores inteiros e os centavos
-    const [reais, centavos] = formattedPrice.replace('R$', '').trim().split(',');
+    const [reais, centavos] = formattedPrice
+      .replace("R$", "")
+      .trim()
+      .split(",");
 
     return {
       reais,
@@ -83,41 +82,28 @@ const ProductDetails = ({ route }) => {
     COLOR: "Cor",
     PROCESSOR_MODEL: "Processador",
   };
-//{item.attributes.find(attr => attr.id === 'BRAND').value_name}
 
-  //ERA ASSIM - ESTA MAIS ENTENDIVEL
-  //   <View style={styles.container}>
-  //   <Text>{item.title}</Text>
-  //   <Image source={{uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg")}} style={styles.image}/>
-  //   <View style={styles.description}>
-  //       <Text>Marca: <span style={styles.value_description}> {findAttribute('BRAND')} </span> </Text>
-  //       <Text>Linha: <span style={styles.value_description}> {findAttribute('LINE')} </span> </Text>
-  //       <Text>Modelo: <span style={styles.value_description}> {findAttribute('MODEL')} </span> </Text>
-  //       <Text>Cor: <span style={styles.value_description}> {findAttribute('COLOR')} </span> </Text>
-  //       <Text>Processador: <span style={styles.value_description}> {findAttribute('PROCESSOR_MODEL')} </span> </Text>
-  //   </View>
-  // </View>
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Text style={styles.title}>{item.title}</Text>
-      <View>
-
-        <Icon
-          name={favorite ? 'heart' : 'heart-o'}
-          type='font-awesome'
-          color={favorite ? 'red' : 'grey'}
-          onPress={toggleFavorite}
-          containerStyle={{ position: 'absolute', top: 0, right: 5 }}
-        />
-        <Image
-          source={{ uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") }}
-          style={styles.image}
+        <View>
+          <Icon
+            name={favorite ? "heart" : "heart-o"}
+            type="font-awesome"
+            color={favorite ? "red" : "grey"}
+            onPress={toggleFavorite}
+            containerStyle={{ position: "absolute", top: 0, right: 5 }}
           />
-
-      </View>
-      {showMessage && (
-          <View style={[styles.messageContainer, { backgroundColor: messageColor }]}>
+          <Image
+            source={{ uri: item.thumbnail.replace(/\w\.jpg/gi, "W.jpg") }}
+            style={styles.image}
+          />
+        </View>
+        {showMessage && (
+          <View
+            style={[styles.messageContainer, { backgroundColor: messageColor }]}
+          >
             <Text style={styles.messageText}>{message}</Text>
           </View>
         )}
@@ -126,44 +112,41 @@ const ProductDetails = ({ route }) => {
           <Text style={styles.priceCents}>{centavos}</Text>
         </Text>
         <Text style={styles.labelDescription}>Características do produto</Text>
-          <View style={styles.viewDescription}>
-            {Object.keys(attributeLabels).map((attrId, index) => {
-              const attributeValue = findAttribute(attrId);
-              const itemStyle =
-                index % 2 === 0 ? styles.itemEven : styles.itemOdd;
+        <View style={styles.viewDescription}>
+          {Object.keys(attributeLabels).map((attrId, index) => {
+            const attributeValue = findAttribute(attrId);
+            const itemStyle =
+              index % 2 === 0 ? styles.itemEven : styles.itemOdd;
 
-              return (
-                <View key={attrId} style={[styles.item, itemStyle]}>
-                  <Text style={styles.description}>
-                    {attributeLabels[attrId]}:{" "}
-                    <Text style={styles.valueDescription}>
-                      {attributeValue}
-                    </Text>
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
+            return (
+              <View key={attrId} style={[styles.item, itemStyle]}>
+                <Text style={styles.description}>
+                  {attributeLabels[attrId]}:{" "}
+                  <Text style={styles.valueDescription}>{attributeValue}</Text>
+                </Text>
+              </View>
+            );
+          })}
+        </View>
       </View>
     </ScrollView>
-
   );
 };
 
 const styles = StyleSheet.create({
   messageContainer: {
-    position: 'absolute',
-    bottom: '10%', 
-    width: '90%',
+    position: "absolute",
+    bottom: "10%",
+    width: "90%",
     padding: 15,
-    backgroundColor: '#039703',
-    alignItems: 'center',
+    backgroundColor: "#039703",
+    alignItems: "center",
     zIndex: 1000,
     borderRadius: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   messageText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   scrollView: {
@@ -176,7 +159,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
   },
   image: {
@@ -188,23 +171,23 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 40,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 10,
     marginBottom: 10,
     fontWeight: "500",
   },
   priceSymbol: {
     fontSize: 17,
-    verticalAlign: 'super',
+    verticalAlign: "super",
   },
   priceCents: {
     fontSize: 17,
-    verticalAlign: 'super',
+    verticalAlign: "super",
   },
   labelDescription: {
     fontSize: 20,
-    borderTopColor: '#cdcdcd',
-    borderBottomColor: '#cdcdcd',
+    borderTopColor: "#cdcdcd",
+    borderBottomColor: "#cdcdcd",
     borderBottomWidth: 1,
     borderTopWidth: 1,
     marginTop: 10,
@@ -228,10 +211,10 @@ const styles = StyleSheet.create({
     marginBottom: 10, // Adiciona um espaçamento entre os itens
   },
   itemEven: {
-    backgroundColor: '#ececec',
+    backgroundColor: "#ececec",
   },
   itemOdd: {
-    backgroundColor: '#87898a',
+    backgroundColor: "#87898a",
   },
 });
 

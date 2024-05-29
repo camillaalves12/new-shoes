@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, View, FlatList,} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ProductCard from '../components/ProductCard/ProductCard';
-import { useFocusEffect } from '@react-navigation/native';
-
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { StyleSheet, View, FlatList } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProductCard from "../components/ProductCard/ProductCard";
+import { useFocusEffect } from "@react-navigation/native";
 
 const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
@@ -11,12 +10,12 @@ const FavoritesScreen = ({ navigation }) => {
 
   const updateFavorites = useCallback(async () => {
     try {
-      const favorites = await AsyncStorage.getItem('favorites');
+      const favorites = await AsyncStorage.getItem("favorites");
       if (favorites !== null && isMounted.current) {
         setFavorites(JSON.parse(favorites));
       }
     } catch (error) {
-      console.error('Failed to fetch favorites:', error);
+      console.error("Failed to fetch favorites:", error);
     }
   }, []);
 
@@ -39,7 +38,7 @@ const FavoritesScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     const handlePress = () => {
       if (item) {
-        navigation.navigate('Detalhes', { item });
+        navigation.navigate("Detalhes", { item });
       }
     };
 
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#fff",
-  }
+  },
 });
 
 export default FavoritesScreen;
